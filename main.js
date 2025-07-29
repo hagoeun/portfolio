@@ -37,15 +37,6 @@ scene.add(directionalLight);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-const floorMesh = new THREE.Mesh(
-  new THREE.PlaneGeometry(50, 50),
-  new THREE.MeshLambertMaterial({
-    color: 'burlywood'
-  })
-);
-floorMesh.rotation.x = -Math.PI/2;
-scene.add(floorMesh);
-
 // gltf loader
 const gltfLoader = new GLTFLoader();
 gltfLoader.load(
@@ -61,7 +52,6 @@ const clock = new THREE.Clock();
 
 function draw() {
   const delta = clock.getDelta();
-
   renderer.render(scene, camera);
   window.requestAnimationFrame(draw);
 }
