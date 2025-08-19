@@ -48,7 +48,7 @@ function init() {
     if (clickableOverlay) {
         clickableOverlay.style.cursor = 'pointer';
         clickableOverlay.addEventListener('click', () => {
-            window.location.href = 'project.html'; // 원하는 새 페이지 경로
+            window.location.href = './project.html'; // 원하는 새 페이지 경로
         });
     }
 
