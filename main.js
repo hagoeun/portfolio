@@ -1,69 +1,84 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader';
+import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
 
-// Renderer
-const canvas = document.querySelector('#three-canvas');
-const renderer = new THREE.WebGLRenderer({
-  canvas,
-  antialias: true
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+let camera, scene, renderer, effect;
+let plane, texture, ctx, canvas;
+const startTime = Date.now();
 
-// Scene
-const scene = new THREE.Scene();
-scene.background = new THREE.Color('white');
+init();
+animate();
 
-// Camera
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.position.y = 3;
-camera.position.z = 6;
-scene.add(camera);
+function init() {
+    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.z = 400;
 
-// Light
-const ambientLight = new THREE.AmbientLight('white', 1);
-scene.add(ambientLight);
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);  // 씬 배경 검정
 
-const directionalLight = new THREE.DirectionalLight('white', 0.5);
-directionalLight.position.x = 1;
-directionalLight.position.z = 2;
-scene.add(directionalLight);
+    // 캔버스 생성 및 초기 세팅
+    canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 256;
+    ctx = canvas.getContext('2d');
 
-const controls = new OrbitControls(camera, renderer.domElement);
+    // 텍스처 생성
+    texture = new THREE.CanvasTexture(canvas);
 
-// gltf loader
-const gltfLoader = new GLTFLoader();
-gltfLoader.load(
-  './models/palmtree.glb',
-  gltf => {
-    const mesh = gltf.scene.children[0];
-    scene.add(mesh);
-  }
-);
+    // 평면에 텍스처 적용
+    const geometry = new THREE.PlaneGeometry(800, 200);
+    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+    plane = new THREE.Mesh(geometry, material);
+    scene.add(plane);
 
-// Draw
-const clock = new THREE.Clock();
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-function draw() {
-  const delta = clock.getDelta();
-  renderer.render(scene, camera);
-  window.requestAnimationFrame(draw);
+    effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
+    effect.setSize(window.innerWidth, window.innerHeight);
+
+    effect.domElement.style.color = 'white';           // 글자 흰색
+    effect.domElement.style.backgroundColor = 'black'; // 배경 검정
+
+    document.body.appendChild(effect.domElement);
+
+    // 기존에 cursor, 클릭 이벤트는 오버레이 div에서 처리하므로 제거
+
+    // 오버레이 클릭 이벤트 등록 (HTML에서 #clickable-overlay가 있어야 함)
+    const clickableOverlay = document.getElementById('clickable-overlay');
+    if (clickableOverlay) {
+        clickableOverlay.style.cursor = 'pointer';
+        clickableOverlay.addEventListener('click', () => {
+            window.location.href = '/'; // 원하는 새 페이지 경로
+        });
+    }
+
+    window.addEventListener('resize', onWindowResize);
 }
 
-function setSize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.render(scene, camera);
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    effect.setSize(window.innerWidth, window.innerHeight);
 }
 
-// Event
-window.addEventListener('resize', setSize);
+function animate() {
+    const elapsed = Date.now() - startTime;
 
-draw();
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = 'bold 80px "Monaco", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'white';
+
+    const y = canvas.height / 2 + Math.sin(elapsed * 0.003) * 30;
+    ctx.fillText('Press Start', canvas.width / 2, y);
+
+    texture.needsUpdate = true;
+
+    effect.render(scene, camera);
+    requestAnimationFrame(animate);
+}

@@ -15,9 +15,30 @@
 			}
 		}
 	</script>
+	<style>
+  #clickable-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;     /* 아스키 아트 텍스트 영역과 맞추기 */
+    height: 100px;    
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 1000;
+    background: transparent;
+		pointer-events: auto; /* 클릭 가능 */
+  }
+</style>
 </head>
+
+
 <body>
-	<canvas id="three-canvas"></canvas>
+  <!-- 아스키 아트 출력 영역 -->
+  <!-- main.js로 effect.domElement가 붙습니다 -->
+
+  <!-- 클릭 영역 투명 div -->
+  <div id="clickable-overlay"></div>
   <script type="module" src="main.js"></script>
 </body>
+
 </html>
