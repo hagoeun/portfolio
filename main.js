@@ -19,7 +19,7 @@ function init() {
     canvas = document.createElement('canvas');
     canvas.width = 1024;
     canvas.height = 256;
-    ctx = canvas.getContext('2d');
+    ctx = canvas.getContext('2d', { willReadFrequently: true });
 
     // 텍스처 생성
     texture = new THREE.CanvasTexture(canvas);
@@ -48,7 +48,7 @@ function init() {
     if (clickableOverlay) {
         clickableOverlay.style.cursor = 'pointer';
         clickableOverlay.addEventListener('click', () => {
-            window.location.href = '/'; // 원하는 새 페이지 경로
+            window.location.href = 'project.html'; // 원하는 새 페이지 경로
         });
     }
 
