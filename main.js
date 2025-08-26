@@ -82,3 +82,16 @@ function animate() {
     effect.render(scene, camera);
     requestAnimationFrame(animate);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const menuSections = document.querySelectorAll('.menu-section-title');
+  menuSections.forEach(menu => {
+    menu.addEventListener('click', () => {
+      // 모든 메뉴에서 active 제거
+      menuSections.forEach(m => m.classList.remove('active'));
+      // 클릭한 메뉴에만 active 추가
+      menu.classList.add('active');
+    });
+  });
+});
+

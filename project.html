@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Project</title>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio</title>
+  <!-- Noto Sans KR - 한글/영문 통일 폰트 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <style>
     html, body {
       width: 100%;
@@ -11,18 +13,16 @@
       margin: 0;
       padding: 0;
       background: #000;
+      box-sizing: border-box;
     }
-
     body {
       height: 100vh;
-      box-sizing: border-box;
-      position: relative;
-      font-family: 'Share Tech Mono', 'Courier New', Courier, monospace;
+      /* Noto Sans KR로 전체 통일 */
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       color: #fff;
-      overflow: hidden;
+      overflow-x: hidden;
+      position: relative;
     }
-
-    /* 가로, 세로 십자가 라인 */
     .h-line, .v-line {
       position: absolute;
       background: #fff;
@@ -30,58 +30,362 @@
       opacity: 0.8;
     }
     .h-line {
-      top: 120px;
-      left: 0;
-      width: 100%;
-      height: 2px;
+      top: 120px; left: 0;
+      width: 100%; height: 2px;
     }
     .v-line {
-      left: 210px;
-      top: 0;
-      width: 2px;
-      height: 100%;
+      left: 210px; top: 0;
+      width: 2px; height: 100vh; /* 화면 세로 길이에 맞춤 */
     }
-
-    /* 픽셀 아트 이미지 */
     .icon {
-      position: absolute;
-      top: 30px;
-      left: 70px;
-      z-index: 1;
-      width: 72px;
-      height: 72px;
+      position: absolute; top: 30px; left: 70px;
+      width: 72px; height: 72px;
       image-rendering: pixelated;
+      z-index: 1;
     }
-
-    /* 메뉴 텍스트 */
     .menu {
       position: absolute;
-      top: 120px;
-      left: 55px;
+      top: 160px; left: 30px; right: 0;
+      display: flex;
+      gap: 20px;
       z-index: 1;
+    }
+    /* 왼쪽 네비게이션 버튼 영역 */
+    .menu-left {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-    }
-    .menu-item {
+      gap: 36px;
+      width: 150px; /* 180px에서 150px로 줄임 */
       font-size: 1.5rem;
-      margin: 36px 0;
-      letter-spacing: 2px;
-      font-family: 'Share Tech Mono', 'Courier New', Courier, monospace;
-      white-space: pre;
+      padding-left: 10px;
+      border-left: 6px solid transparent;
+      user-select: none;
+    }
+    .menu-section-title {
+      padding: 12px 20px; /* 좌우 패딩을 24px에서 20px로 줄임 */
+      cursor: pointer;
+      border-left: 6px solid transparent;
+      background: transparent;
+      color: #fff;
+      transition: all 0.3s ease;
+      text-align: left;
+      border: none;
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      max-width: 130px; /* 최대 너비 제한으로 세로선 넘지 않게 함 */
+    }
+    .menu-section-title:hover {
+      background: #333;
+      border-left-color: #666;
+    }
+    .menu-section-title.active {
+      background: #fff;
+      color: #000;
+      border-left-color: #fff;
+    }
+    /* 오른쪽 컨텐츠 영역 */
+    .menu-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 1.2rem;
+      padding-left: 20px;
+      padding-right: 40px;
+      padding-top: 5px;
+    }
+    .content-section {
+      display: none;
+    }
+    .content-section.active {
+      display: flex;
+      flex-direction: column;
+      gap: 3px; /* 프로젝트 항목들 간의 간격 조정 */
+    }
+    .work-item {
+      background: #000;
+      padding: 12px 24px;
+      letter-spacing: 1.5px;
+      border-left: 6px solid transparent;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s, border-left-color 0.3s;
+    }
+    .work-item:hover {
+      background: #222;
+      border-left-color: #444;
+    }
+    .work-item.active {
+      background: #fff;
+      color: #000;
+      border-left-color: #fff;
+    }
+    .work-detail {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, padding 0.5s ease;
+      padding: 0 24px;
+      background: #111;
+      color: #eee;
+      font-size: 1rem;
+      box-sizing: border-box;
+      line-height: 1.6;
+    }
+    .work-detail.active {
+      max-height: 1000px; /* 유튜브 영상을 위해 높이 증가 */
+      padding: 12px 24px;
+      margin-bottom: 50px; /* 토글 열린 상태에서 아래쪽 여백 추가 */
+    }
+    .work-detail img {
+      max-width: 100%;
+      height: auto;
+      margin-top: 10px;
+      border: 1px solid #333;
+    }
+    /* 유튜브 비디오 스타일 */
+    .youtube-container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%; /* 16:9 비율 */
+      margin: 16px 0;
+      background: #222;
+      border: 1px solid #444;
+    }
+    .youtube-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .info-content {
+      padding: 24px;
+      line-height: 1.8;
+      font-size: 1.1rem;
+    }
+    .info-section {
+      margin-bottom: 40px;
+    }
+    .info-section h3 {
+      color: #fff;
+      margin-bottom: 16px;
+      font-size: 1.4rem;
+      border-bottom: 2px solid #333;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: normal; /* bold 제거 */
+      line-height: 1.4;
+      margin: 0; /* 기본 마진 제거 */
+    }
+    .contact-item {
+      margin-bottom: 12px;
+    }
+    .contact-item strong {
+      color: #ccc;
+      display: inline-block;
+      width: 100px;
+    }
+    @media (max-width: 600px) {
+      .menu {
+        top: 90px;
+        left: 20px;
+        right: 20px;
+        flex-direction: column;
+      }
+      .menu-left {
+        width: 100%;
+        flex-direction: row;
+        gap: 12px;
+        font-size: 1rem;
+        padding-left: 0;
+      }
+      .menu-section-title {
+        font-size: 1rem;
+        padding: 8px 16px;
+        max-width: none; /* 모바일에서는 최대 너비 제한 해제 */
+      }
+      .menu-right {
+        font-size: 0.9rem;
+        padding-right: 0;
+      }
+      .icon {
+        width: 48px;
+        height: 48px;
+        left: 20px;
+        top: 20px;
+      }
+      .v-line {
+        left: 90px;
+      }
+      .youtube-container {
+        padding-bottom: 75%; /* 모바일에서는 4:3 비율 */
+      }
     }
   </style>
 </head>
 <body>
-  <!-- 십자선 -->
   <div class="h-line"></div>
   <div class="v-line"></div>
-  <!-- 픽셀 아트 이미지 파일 -->
-  <img class="icon" src="space-invader.png" alt="icon" />
-  <!-- 메뉴 텍스트 -->
+  
+  <!-- Space Invader Icon (placeholder) -->
+  <img src="space-invader.png" class="icon" alt="icon" />
+  
   <div class="menu">
-    <div class="menu-item">Project</div>
-    <div class="menu-item" style="margin-top:10px;">Info</div>
+    <!-- 왼쪽 네비게이션 -->
+    <div class="menu-left">
+      <button class="menu-section-title active" data-section="project">Project</button>  
+      <button class="menu-section-title" data-section="info">Info</button>
+    </div>
+    
+    <!-- 오른쪽 컨텐츠 영역 -->
+    <div class="menu-right">
+      <!-- Project 섹션 -->
+      <div class="content-section active" id="project-section">
+        <div class="work-item" data-detail="detail1">01 Restoration Process Experience Kit for SeMoCa</div>
+        <div id="detail1" class="work-detail">
+          <h3>■ 서울공예박물관 속, 초등학교 저학년을 위한 자수복원체험 | Embodied Interaction Team Project with. Susie Kim</h3>
+          <p><strong>[ Intro ]</strong><br>서울공예박물관의 보이는 수장고 및 복원실에서 영감을 받아, 4가지의 복원과정을 직접 체험해볼 수 있는 장치를 제작했습니다.<br>
+          주요한 복원과정일 것 / 직관적인 행동을 통해 표현이 가능할 것이라는 조건에 따라, 최종적으로 아래의 4가지 행동을 선정했습니다.<br></p>
+          <p><blockquote>① X선 촬영으로 문제상황 확인<br>② 붓으로 먼지 제거<br>③ 직물조각을 맞추어 훼손된 부분 복원<br>④ 바느질로 비뚤어진 자수 복원</blockquote></p>
+          <p><strong>[ Graphic Motive ]</strong><br>'자수 연화당초문 현우경 표지' | 서울공예박물관에서 소장 및 복원</p>
+          <p><strong>[ Programs ]</strong><br>아두이노, 마이크로비트, 프로세싱</p>
+          
+          <!-- 유튜브 비디오 추가 -->
+          <div class="youtube-container">
+            <iframe src="https://www.youtube.com/embed/2aywlG_iKgQ" 
+                    title="SeMoCa 복원 체험" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+            </iframe>
+          </div>
+          
+          <div style="width: 100%; height: 200px; background: #222; border: 1px solid #444; display: flex; align-items: center; justify-content: center; margin-top: 16px; color: #666;">
+            Project Image Placeholder
+          </div>
+        </div>
+        
+        <div class="work-item" data-detail="detail2">02 Interactive Media Installation</div>
+        <div id="detail2" class="work-detail">
+          <p>관객과 상호작용하는 미디어 설치 작품으로, 센서와 프로젝션 매핑 기술을 활용하여 공간 전체를 몰입적인 경험 공간으로 변화시킵니다.</p>
+          <p><strong>기술 스택:</strong></p>
+          <ul>
+            <li>Unity 3D / C#</li>
+            <li>Kinect Sensor</li>
+            <li>Projection Mapping</li>
+            <li>Real-time Audio Processing</li>
+          </ul>
+          <div style="width: 100%; height: 200px; background: #222; border: 1px solid #444; display: flex; align-items: center; justify-content: center; margin-top: 16px; color: #666;">
+            Interactive Installation Image
+          </div>
+        </div>
+        
+        <div class="work-item" data-detail="detail3">03 AR Cultural Heritage App</div>
+        <div id="detail3" class="work-detail">
+          <p>증강현실 기술을 활용하여 문화유산을 디지털로 복원하고 체험할 수 있는 모바일 애플리케이션입니다.</p>
+          <p><strong>주요 특징:</strong></p>
+          <ul>
+            <li>ARKit/ARCore 기반 3D 오브젝트 배치</li>
+            <li>역사적 정보와 인터랙티브 콘텐츠</li>
+            <li>다국어 지원 및 접근성 고려</li>
+          </ul>
+          <div style="width: 100%; height: 200px; background: #222; border: 1px solid #444; display: flex; align-items: center; justify-content: center; margin-top: 16px; color: #666;">
+            AR App Screenshot
+          </div>
+        </div>
+      </div>
+      
+      <!-- Info 섹션 -->
+      <div class="content-section" id="info-section">
+        <div class="info-content">
+          <div class="info-section">
+            <h3>About</h3>
+            <p>디지털 아트와 인터랙티브 미디어 분야에서 활동하는 크리에이터입니다. 기술과 예술의 경계를 넘나들며, 새로운 형태의 경험을 창조하는 작업에 집중하고 있습니다.</p>
+            <p>특히 문화유산의 디지털 보존과 현대적 재해석을 통해 전통과 현재를 연결하는 프로젝트를 진행하고 있습니다.</p>
+          </div>
+          
+          <div class="info-section">
+            <h3>Skills</h3>
+            <p><strong>Programming:</strong> JavaScript, Python, C#, HTML/CSS</p>
+            <p><strong>Tools:</strong> Unity 3D, Three.js, Blender, Adobe Creative Suite</p>
+            <p><strong>Technologies:</strong> AR/VR, Machine Learning, IoT, Projection Mapping</p>
+          </div>
+          
+          <div class="info-section">
+            <h3>Education</h3>
+            <p><strong>2020 - 2024</strong> Digital Media Arts, University</p>
+            <p><strong>2018 - 2020</strong> Computer Science Foundation</p>
+          </div>
+          
+          <div class="info-section">
+            <h3>Contact</h3>
+            <div class="contact-item"><strong>Email:</strong> contact@example.com</div>
+            <div class="contact-item"><strong>Portfolio:</strong> www.portfolio-site.com</div>
+            <div class="contact-item"><strong>GitHub:</strong> github.com/username</div>
+            <div class="contact-item"><strong>LinkedIn:</strong> linkedin.com/in/username</div>
+          </div>
+          
+          <div class="info-section">
+            <h3>Awards & Recognition</h3>
+            <p><strong>2024</strong> Digital Art Innovation Award</p>
+            <p><strong>2023</strong> Interactive Media Excellence Prize</p>
+            <p><strong>2022</strong> Cultural Technology Integration Award</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <script>
+    // 메뉴 섹션 전환 (Project/Info)
+    const menuSections = document.querySelectorAll('.menu-section-title');
+    const contentSections = document.querySelectorAll('.content-section');
+    
+    menuSections.forEach(menu => {
+      menu.addEventListener('click', () => {
+        // 모든 메뉴에서 active 제거
+        menuSections.forEach(m => m.classList.remove('active'));
+        // 모든 컨텐츠 섹션 숨기기
+        contentSections.forEach(c => c.classList.remove('active'));
+        
+        // 클릭한 메뉴에 active 추가
+        menu.classList.add('active');
+        
+        // 해당 섹션 표시
+        const sectionName = menu.getAttribute('data-section');
+        const targetSection = document.getElementById(sectionName + '-section');
+        if (targetSection) {
+          targetSection.classList.add('active');
+        }
+      });
+    });
+
+    // 프로젝트 아이템 토글 (Project 섹션에서만)
+    const workItems = document.querySelectorAll('.work-item');
+    workItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const detailId = item.getAttribute('data-detail');
+        const detailEl = document.getElementById(detailId);
+        
+        if (detailEl.classList.contains('active')) {
+          detailEl.classList.remove('active');
+          item.classList.remove('active');
+        } else {
+          // 모든 열린 상세 내용 닫기
+          document.querySelectorAll('.work-detail.active').forEach(el => el.classList.remove('active'));
+          document.querySelectorAll('.work-item.active').forEach(el => el.classList.remove('active'));
+          // 선택한 항목 열기
+          detailEl.classList.add('active');
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
