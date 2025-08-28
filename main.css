@@ -10,16 +10,35 @@ body {
   min-height: 100vh;
 }
 
-/* 캔버스 관련 기본 스타일 */
-#three-canvas {
+/* 캔버스 관련 기본 스타일 - 모든 가능한 캔버스 요소 대응 */
+#three-canvas,
+canvas,
+.ascii-container,
+pre {
   position: absolute;
   left: 0;
   top: 0;
-  width: 100vw;
-  height: 100vh;
-  max-width: 100%;
-  max-height: 100%;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
   display: block;
+  object-fit: contain;
+}
+
+/* 아스키 아트 텍스트 반응형 처리 */
+pre, 
+.ascii-art, 
+[class*="ascii"] {
+  font-family: monospace !important;
+  white-space: pre !important;
+  overflow: hidden !important;
+  text-align: center;
+  line-height: 1 !important;
+  font-size: calc(0.8vw + 0.5vh) !important; /* 반응형 폰트 크기 */
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box;
 }
 
 /* 메뉴 영역 전체를 가로 플렉스 컨테이너로 설정 */
@@ -37,8 +56,8 @@ body {
 .menu-left {
   display: flex;
   flex-direction: column;
-  gap: 36px;        /* 제목 간 세로 간격 */
-  width: 150px;     /* 적당한 너비 */
+  gap: 36px; /* 제목 간 세로 간격 */
+  width: 150px; /* 적당한 너비 */
   font-family: 'Share Tech Mono', Courier, monospace;
   font-size: 1.2rem;
 }
@@ -68,12 +87,6 @@ body {
   transition: background 0.2s, color 0.2s, border-left-color 0.2s;
 }
 
-/* .menu-section-title.active {
-  background: #fff !important;
-  color: #000 !important;
-  border-left: 6px solid #fff !important;
-}
- */
 .menu-section-title.active {
   background: #fff !important;
   color: #000 !important;
@@ -86,25 +99,81 @@ body {
   border-left-color: #fff;
 }
 
+/* 미디어쿼리: 태블릿 대응 */
+@media (max-width: 768px) {
+  /* 아스키 아트 폰트 크기 조정 */
+  pre, 
+  .ascii-art, 
+  [class*="ascii"] {
+    font-size: calc(1vw + 0.5vh) !important;
+  }
+  
+  .menu {
+    top: 100px;
+    left: 30px;
+    right: 30px;
+  }
+}
+
 /* 미디어쿼리: 모바일에서 캔버스 높이 조정 및 메뉴 가로 스택 처리 */
 @media (max-width: 600px) {
-  #three-canvas {
-    width: 100vw;
-    height: 60vh;    /* 모바일에서 캔버스 높이 축소 */
+  #three-canvas,
+  canvas,
+  .ascii-container,
+  pre {
+    width: 100vw !important;
+    height: 100vh !important; /* 전체 화면 사용 */
   }
+  
+  /* 아스키 아트 모바일 최적화 */
+  pre, 
+  .ascii-art, 
+  [class*="ascii"] {
+    font-size: calc(1.2vw + 0.3vh) !important;
+    padding: 10px !important;
+    transform: scale(0.9); /* 전체적으로 90% 크기로 축소 */
+    transform-origin: center;
+  }
+  
   .menu {
-    flex-direction: column;  /* 모바일은 메뉴를 수직 스택으로 */
+    flex-direction: column; /* 모바일은 메뉴를 수직 스택으로 */
     top: 90px;
     left: 20px;
     right: 20px;
   }
+  
   .menu-left {
     width: 100%;
     flex-direction: row;
     gap: 12px;
     font-size: 1rem;
   }
+  
   .menu-right {
     font-size: 0.9rem;
+  }
+}
+
+/* 아주 작은 모바일 화면 */
+@media (max-width: 480px) {
+  pre, 
+  .ascii-art, 
+  [class*="ascii"] {
+    font-size: calc(1.5vw + 0.2vh) !important;
+    transform: scale(0.8); /* 80% 크기로 더 축소 */
+  }
+}
+
+/* 세로가 짧은 화면 (가로모드 등) */
+@media (max-height: 500px) {
+  pre, 
+  .ascii-art, 
+  [class*="ascii"] {
+    font-size: calc(0.8vw + 0.8vh) !important;
+    transform: scale(0.7);
+  }
+  
+  .menu {
+    top: 60px;
   }
 }
