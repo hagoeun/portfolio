@@ -22,14 +22,39 @@ body {
   padding: 0;
   overflow: hidden;
   touch-action: none; /* 모바일에서 스크롤 방지 */
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Three.js 캔버스 강제 반응형 처리 */
+canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain;
+}
+
+/* 아스키 아트 컨테이너가 있다면 */
+pre, .ascii-art, [class*="ascii"] {
+  width: 100% !important;
+  max-width: 100vw !important;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: calc(0.8vw + 0.8vh) !important; /* 반응형 폰트 크기 */
 }
 
 #clickable-overlay {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 400px; /* 데스크탑 기본 크기 */
-  height: 100px;
+  width: 60%;
+  height: 30%;
+  max-width: 400px;
+  max-height: 120px;
+  min-width: 200px;
+  min-height: 60px;
   transform: translate(-50%, -50%);
   cursor: pointer;
   z-index: 1000;
@@ -40,54 +65,17 @@ body {
 /* 태블릿 대응 */
 @media (max-width: 768px) {
   #clickable-overlay {
-    width: 80vw; /* 화면 너비의 80% */
-    max-width: 350px; /* 최대 크기 제한 */
-    height: 80px;
+    width: 70%;
+    height: 25%;
   }
 }
 
 /* 모바일 대응 */
 @media (max-width: 480px) {
   #clickable-overlay {
-    width: 90vw; /* 화면 너비의 90% */
-    max-width: 300px; /* 최대 크기 제한 */
-    height: 70px;
-    /* 모바일에서는 살짝 위쪽으로 이동 (키보드 영향 방지) */
-    top: 45%;
-  }
-}
-
-/* 아주 작은 화면 (320px 이하) */
-@media (max-width: 320px) {
-  #clickable-overlay {
-    width: 95vw;
-    max-width: 280px;
-    height: 60px;
-    top: 40%;
-  }
-}
-
-/* 세로 모드 모바일에서 높이가 낮을 때 */
-@media (max-height: 600px) and (max-width: 480px) {
-  #clickable-overlay {
-    top: 40%;
-    height: 50px;
-  }
-}
-
-/* 터치 디바이스에서 호버 효과 제거 */
-@media (hover: none) and (pointer: coarse) {
-  #clickable-overlay {
-    /* 터치 디바이스에서는 hover 효과 없음 */
-  }
-}
-
-/* 가로 모드 모바일 */
-@media (max-width: 768px) and (orientation: landscape) {
-  #clickable-overlay {
-    width: 60vw;
-    height: 60px;
-    top: 45%;
+    width: 80%;
+    height: 20%;
+    top: 45%; /* 약간 위로 */
   }
 }
 </style>

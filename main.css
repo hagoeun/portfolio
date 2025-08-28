@@ -10,11 +10,30 @@ body {
   min-height: 100vh;
 }
 
+/* AsciiEffect 전용 스타일 - 가장 중요! */
+pre[style],
+div[style*="font-family"],
+*[style*="monospace"] {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  white-space: pre !important;
+  line-height: 1 !important;
+  font-family: monospace !important;
+  color: white !important;
+  background-color: black !important;
+}
+
 /* 캔버스 관련 기본 스타일 - 모든 가능한 캔버스 요소 대응 */
 #three-canvas,
 canvas,
-.ascii-container,
-pre {
+.ascii-container {
   position: absolute;
   left: 0;
   top: 0;
@@ -24,21 +43,6 @@ pre {
   max-height: 100% !important;
   display: block;
   object-fit: contain;
-}
-
-/* 아스키 아트 텍스트 반응형 처리 */
-pre, 
-.ascii-art, 
-[class*="ascii"] {
-  font-family: monospace !important;
-  white-space: pre !important;
-  overflow: hidden !important;
-  text-align: center;
-  line-height: 1 !important;
-  font-size: calc(0.8vw + 0.5vh) !important; /* 반응형 폰트 크기 */
-  padding: 0 !important;
-  margin: 0 !important;
-  box-sizing: border-box;
 }
 
 /* 메뉴 영역 전체를 가로 플렉스 컨테이너로 설정 */
