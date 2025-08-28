@@ -1,51 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-	<title>Three.js</title>
-	<link rel="stylesheet" href="./main.css">
-	<script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
-	<script type="importmap">
-		{
-			"imports": {
-				"three": "https://unpkg.com/three@0.156.0/build/three.module.js",
-				"three/addons/": "https://unpkg.com/three@0.156.0/examples/jsm/"
-			}
-		}
-	</script>
-	<style>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three.js</title>
+<link rel="stylesheet" href="./main.css">
+<script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+<script type="importmap">
+ {
+ "imports": {
+ "three": "https://unpkg.com/three@0.156.0/build/three.module.js",
+ "three/addons/": "https://unpkg.com/three@0.156.0/examples/jsm/"
+ }
+ }
+</script>
+<style>
+/* 기본 body 스타일 - 모바일 대응 */
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  touch-action: none; /* 모바일에서 스크롤 방지 */
+}
+
+#clickable-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 400px; /* 데스크탑 기본 크기 */
+  height: 100px;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 1000;
+  background: transparent;
+  pointer-events: auto; /* 클릭 가능 */
+}
+
+/* 태블릿 대응 */
+@media (max-width: 768px) {
   #clickable-overlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 400px;     /* 아스키 아트 텍스트 영역과 맞추기 */
-    height: 100px;    
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-    z-index: 1000;
-    background: transparent;
-		pointer-events: auto; /* 클릭 가능 */
+    width: 80vw; /* 화면 너비의 80% */
+    max-width: 350px; /* 최대 크기 제한 */
+    height: 80px;
   }
+}
+
+/* 모바일 대응 */
+@media (max-width: 480px) {
+  #clickable-overlay {
+    width: 90vw; /* 화면 너비의 90% */
+    max-width: 300px; /* 최대 크기 제한 */
+    height: 70px;
+    /* 모바일에서는 살짝 위쪽으로 이동 (키보드 영향 방지) */
+    top: 45%;
+  }
+}
+
+/* 아주 작은 화면 (320px 이하) */
+@media (max-width: 320px) {
+  #clickable-overlay {
+    width: 95vw;
+    max-width: 280px;
+    height: 60px;
+    top: 40%;
+  }
+}
+
+/* 세로 모드 모바일에서 높이가 낮을 때 */
+@media (max-height: 600px) and (max-width: 480px) {
+  #clickable-overlay {
+    top: 40%;
+    height: 50px;
+  }
+}
+
+/* 터치 디바이스에서 호버 효과 제거 */
+@media (hover: none) and (pointer: coarse) {
+  #clickable-overlay {
+    /* 터치 디바이스에서는 hover 효과 없음 */
+  }
+}
+
+/* 가로 모드 모바일 */
+@media (max-width: 768px) and (orientation: landscape) {
+  #clickable-overlay {
+    width: 60vw;
+    height: 60px;
+    top: 45%;
+  }
+}
 </style>
 </head>
-
-
 <body>
-  <!-- 아스키 아트 출력 영역 -->
-  <!-- main.js로 effect.domElement가 붙습니다 -->
+<!-- 아스키 아트 출력 영역 -->
+<!-- main.js로 effect.domElement가 붙습니다 -->
 
-  <!-- 클릭 영역 투명 div -->
-  <div id="clickable-overlay"></div>
-  <script type="module" src="main.js"></script>
-	<script>
-  document.getElementById('clickable-overlay').addEventListener('click', () => {
-    location.href = './project.html';
-  });
+<!-- 클릭 영역 투명 div -->
+<div id="clickable-overlay"></div>
+
+<script type="module" src="main.js"></script>
+<script>
+document.getElementById('clickable-overlay').addEventListener('click', () => {
+  location.href = './project.html';
+});
+
+// 모바일 터치 이벤트 추가 (더 나은 반응성)
+document.getElementById('clickable-overlay').addEventListener('touchend', (e) => {
+  e.preventDefault(); // 기본 터치 동작 방지
+  location.href = './project.html';
+});
 </script>
-
-
 </body>
-
 </html>
