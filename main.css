@@ -4,45 +4,61 @@ html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  overflow: hidden; /* 스크롤 방지 */
 }
 
 body {
   min-height: 100vh;
+  background: black;
 }
 
-/* AsciiEffect 전용 스타일 - 가장 중요! */
-pre[style],
-div[style*="font-family"],
-*[style*="monospace"] {
-  width: 100vw !important;
-  height: 100vh !important;
+/* 모든 가능한 요소에 강제 스타일 적용 */
+*, 
+*:before, 
+*:after,
+div,
+pre,
+canvas,
+#three-canvas,
+[style],
+[style*="monospace"],
+[style*="pre"],
+[style*="font-family"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* AsciiEffect가 생성하는 모든 요소 강제 적용 */
+body > div,
+body > pre,
+body > canvas,
+body > * {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
   margin: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;
-  box-sizing: border-box !important;
   white-space: pre !important;
-  line-height: 1 !important;
   font-family: monospace !important;
   color: white !important;
   background-color: black !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-/* 캔버스 관련 기본 스타일 - 모든 가능한 캔버스 요소 대응 */
-#three-canvas,
-canvas,
-.ascii-container {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  display: block;
-  object-fit: contain;
+/* 클릭 오버레이는 제외 */
+#clickable-overlay {
+  position: fixed !important;
+  z-index: 1000 !important;
+  background: transparent !important;
+  pointer-events: auto !important;
 }
 
 /* 메뉴 영역 전체를 가로 플렉스 컨테이너로 설정 */
