@@ -24,7 +24,7 @@ function init() {
 
   // 캔버스 크기 설정 (반응형)
   let canvasWidth, canvasHeight, fontSize;
-  if (window.innerWidth <= 480) {
+  if (window.innerWidth <= 512) {
     canvasWidth = 512;
     canvasHeight = 128;
     fontSize = 40;
