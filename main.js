@@ -1,3 +1,11 @@
+// 페이지 내용을 즉시 숨기기
+document.documentElement.style.visibility = 'hidden';
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.style.background = 'black';
+  document.body.innerHTML = '<div id="clickable-overlay"></div>';
+  document.documentElement.style.visibility = 'visible';
+});
+
 import * as THREE from 'three';
 import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
 
