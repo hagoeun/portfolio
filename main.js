@@ -9,6 +9,9 @@ init();
 animate();
 
 function init() {
+  // 즉시 배경을 검정으로 설정
+  document.body.style.backgroundColor = 'black';
+  document.body.style.color = 'transparent';
   camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 400;
   
@@ -45,7 +48,13 @@ function init() {
   effect = new AsciiEffect(renderer, characters, options);
   effect.setSize(window.innerWidth, window.innerHeight);
   
+  effect.domElement.style.position = 'fixed';
+  effect.domElement.style.top = '0';
+  effect.domElement.style.left = '0';
+  effect.domElement.style.zIndex = '999';
   document.body.appendChild(effect.domElement);
+  // 즉시 아스키 아트가 보이도록 강제 렌더링
+  effect.render(scene, camera);
   
   // DOM 요소에 직접 강력한 스타일 적용
   applyResponsiveStyles(effect.domElement);
@@ -172,6 +181,11 @@ function onWindowResize() {
 }
 
 function animate() {
+  if (!effect || !effect.domElement.isConnected) {
+    requestAnimationFrame(animate);
+    return;
+  }
+  
   const elapsed = Date.now() - startTime;
   
   ctx.fillStyle = 'black';
@@ -183,15 +197,19 @@ function animate() {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'white';
   
-  // 애니메이션을 더 부드럽게 - 속도 줄이고 범위 줄임
-  const amplitude = window.innerWidth <= 480 ? 8 : 15; // 움직임 범위 줄임
-  const speed = 0.001; // 속도 줄임 (기존 0.003에서)
+  const amplitude = window.innerWidth <= 480 ? 8 : 15;
+  const speed = 0.001;
   const y = canvas.height / 2 + Math.sin(elapsed * speed) * amplitude;
   ctx.fillText('Press Start', canvas.width / 2, y);
   
   texture.needsUpdate = true;
   
-  effect.render(scene, camera);
+  try {
+    effect.render(scene, camera);
+  } catch (error) {
+    console.error('Render error:', error);
+  }
+  
   requestAnimationFrame(animate);
 }
 
