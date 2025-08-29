@@ -53,6 +53,76 @@ body > * {
   justify-content: center !important;
 }
 
+/* Table 요소 특별 처리 - AsciiEffect의 핵심 */
+table,
+table * {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-collapse: collapse !important;
+  font-family: monospace !important;
+  color: white !important;
+  background: black !important;
+  line-height: 1 !important;
+  white-space: pre !important;
+  box-sizing: border-box !important;
+}
+
+table {
+  width: 70% !important; /* PC에서 더 여유롭게 */
+  height: 50% !important;
+  table-layout: auto !important; /* fixed에서 auto로 변경하여 글자 잘림 방지 */
+  max-width: none !important;
+  font-size: 9px !important;
+  margin: 0 !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  white-space: nowrap !important; /* 글자 줄바꿈 방지 */
+  line-height: 1.1 !important;
+}
+
+td {
+  text-align: left !important;
+  vertical-align: top !important;
+  overflow: visible !important; /* 글자 잘림 방지 */
+  word-break: normal !important;
+  white-space: nowrap !important;
+  font-size: 9px !important;
+  line-height: 1.1 !important;
+}
+
+/* 태블릿 대응 */
+@media (max-width: 768px) {
+  table {
+    width: 70% !important;
+    height: 50% !important;
+    font-size: 6px !important;
+  }
+  
+  td {
+    font-size: 6px !important;
+  }
+}
+
+/* 모바일 특화 */
+@media (max-width: 480px) {
+  table {
+    width: 100% !important;
+    height: 100% !important;
+    font-size: 4px !important;
+    position: static !important; /* 모바일에서는 위치 고정 해제 */
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+  }
+  
+  td {
+    font-size: 4px !important;
+  }
+}
+
 /* 클릭 오버레이는 제외 */
 #clickable-overlay {
   position: fixed !important;

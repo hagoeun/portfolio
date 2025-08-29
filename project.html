@@ -35,7 +35,8 @@
     }
     .v-line {
       left: 210px; top: 0;
-      width: 2px; height: 100vh; /* 화면 세로 길이에 맞춤 */
+      width: 2px; height: 200vh; /* 높이를 200vh로 늘려 스크롤 시에도 선이 보이게 함 */
+      position: absolute;
     }
     .icon {
       position: absolute; top: 30px; left: 70px;
@@ -213,6 +214,7 @@
       .menu-right {
         font-size: 0.9rem;
         padding-right: 0;
+        padding-left: 0;
       }
       .icon {
         width: 48px;
@@ -220,11 +222,14 @@
         left: 20px;
         top: 20px;
       }
-      .v-line {
-        left: 90px;
-      }
       .youtube-container {
         padding-bottom: 75%; /* 모바일에서는 4:3 비율 */
+      }
+      .v-line {
+        display: none; /* 모바일에서는 세로선 숨김 */
+      }
+      .h-line {
+        top: 75px; /* 모바일에서는 가로선 위치 조정 */
       }
     }
   </style>

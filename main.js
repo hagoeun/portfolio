@@ -183,9 +183,10 @@ function animate() {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'white';
   
-  // 애니메이션도 화면 크기에 맞게 조정
-  const amplitude = window.innerWidth <= 480 ? 15 : 30;
-  const y = canvas.height / 2 + Math.sin(elapsed * 0.003) * amplitude;
+  // 애니메이션을 더 부드럽게 - 속도 줄이고 범위 줄임
+  const amplitude = window.innerWidth <= 480 ? 8 : 15; // 움직임 범위 줄임
+  const speed = 0.001; // 속도 줄임 (기존 0.003에서)
+  const y = canvas.height / 2 + Math.sin(elapsed * speed) * amplitude;
   ctx.fillText('Press Start', canvas.width / 2, y);
   
   texture.needsUpdate = true;
@@ -203,29 +204,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
-
-// 디버깅용 - 실제 생성된 DOM 요소 확인
-setTimeout(() => {
-  console.log('AsciiEffect domElement:', effect.domElement);
-  console.log('Children:', effect.domElement.children);
-  console.log('innerHTML preview:', effect.domElement.innerHTML.substring(0, 200));
-  
-  // 강제로 스타일 적용
-  effect.domElement.style.cssText = `
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    font-size: ${Math.max(6, window.innerWidth / 100)}px !important;
-    color: white !important;
-    background: black !important;
-    font-family: monospace !important;
-    white-space: pre !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1 !important;
-    z-index: 1 !important;
-  `;
-}, 500);

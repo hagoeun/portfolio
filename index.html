@@ -47,19 +47,16 @@ pre, .ascii-art, [class*="ascii"] {
 
 #clickable-overlay {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 60%;
-  height: 30%;
-  max-width: 400px;
-  max-height: 120px;
-  min-width: 200px;
-  min-height: 60px;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 10000;
   background: transparent;
-  pointer-events: auto; /* 클릭 가능 */
+  pointer-events: auto;
+  /* 임시 디버깅용 제거 */
+  /* border: 2px solid rgba(255, 0, 0, 0.3); */
 }
 
 /* 태블릿 대응 */
