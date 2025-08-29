@@ -83,6 +83,7 @@ function onWindowResize() {
 }
 
 function animate() {
+  console.log('animation loop running'); // 디버그용 로그
   const elapsed = Date.now() - startTime;
 
   ctx.fillStyle = 'black';
