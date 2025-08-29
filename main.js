@@ -27,15 +27,15 @@ function init() {
   if (window.innerWidth <= 480) {
     canvasWidth = 512;
     canvasHeight = 128;
-    fontSize = 3;
+    fontSize = 12;
   } else if (window.innerWidth <= 768) {
     canvasWidth = 768;
     canvasHeight = 192;
-    fontSize = 6;
+    fontSize = 18;
   } else {
     canvasWidth = 1024;
     canvasHeight = 256;
-    fontSize = 10;
+    fontSize = 24;
   }
 
   // 텍스트용 오프스크린 canvas
