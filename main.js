@@ -42,7 +42,7 @@ function init() {
   canvas = document.createElement('canvas');
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
-  ctx = canvas.getContext('2d', { willReadFrequently: true });
+  ctx = canvas.getContext('2d');
 
   texture = new THREE.CanvasTexture(canvas);
 

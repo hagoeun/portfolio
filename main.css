@@ -132,7 +132,7 @@ canvas,
   z-index: 100;
 }
 .menu-left, .menu-right { font-family: 'Share Tech Mono', Courier, monospace; }
-.menu-section-title, .menu-section-title.active, .work-item.active { /* 기존 스타일 생략 혹은 유지 */ }
+/* .menu-section-title, .menu-section-title.active, .work-item.active {  } */
 
 /* 미디어쿼리로 메뉴 반응형 추가(필요시) */
 @media (max-width: 768px) {
