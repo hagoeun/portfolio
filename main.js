@@ -219,7 +219,7 @@ function animate() {
   // 반응형 텍스트 크기 - 좀 더 적당하게 조정
   let textSize;
   if (window.innerWidth <= 480) {
-    textSize = 55; 
+    textSize = 50; 
   } else if (window.innerWidth <= 768) {
     textSize = 70; // 80에서 70으로 조정
   } else {
