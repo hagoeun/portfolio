@@ -46,14 +46,27 @@ function init() {
   // 반응형 캔버스 크기
   let canvasWidth, canvasHeight;
   if (window.innerWidth <= 512) {
-    canvasWidth = 800;
-    canvasHeight = 200;
-  } else if (window.innerWidth <= 768) {
-    canvasWidth = 1000;
-    canvasHeight = 250;
-  } else {
     canvasWidth = 1200;
     canvasHeight = 300;
+  } else if (window.innerWidth <= 768) {
+    canvasWidth = 1400;
+    canvasHeight = 350;
+  } else {
+    canvasWidth = 1600;
+    canvasHeight = 400;
+  }
+
+  // Plane 표시 크기 - 화면에 보이는 크기는 별도로 제어
+  let planeWidth, planeHeight;
+  if (window.innerWidth <= 512) {
+    planeWidth = 512;   // 화면 표시용 크기는 작게 유지
+    planeHeight = 128;
+  } else if (window.innerWidth <= 768) {
+    planeWidth = 768;
+    planeHeight = 192;
+  } else {
+    planeWidth = 1024;
+    planeHeight = 256;
   }
 
   // 텍스트 캔버스 생성
@@ -76,8 +89,8 @@ function init() {
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
 
-  // Plane 생성
-  const geometry = new THREE.PlaneGeometry(canvasWidth, canvasHeight);
+  // Plane 생성. canvas 크기와 Plane 크기 분리
+  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
   const material = new THREE.MeshBasicMaterial({ 
     map: texture, 
     transparent: true,
