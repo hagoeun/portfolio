@@ -46,27 +46,27 @@ function init() {
   // 반응형 캔버스 크기
   let canvasWidth, canvasHeight;
   if (window.innerWidth <= 512) {
-    canvasWidth = 1200;
-    canvasHeight = 300;
+    canvasWidth = 600;
+    canvasHeight = 150;
   } else if (window.innerWidth <= 768) {
-    canvasWidth = 1400;
-    canvasHeight = 350;
+    canvasWidth = 800;
+    canvasHeight = 200;
   } else {
-    canvasWidth = 1600;
-    canvasHeight = 400;
+    canvasWidth = 1000;
+    canvasHeight = 250;
   }
 
   // Plane 표시 크기 - 화면에 보이는 크기는 별도로 제어
   let planeWidth, planeHeight;
   if (window.innerWidth <= 512) {
-    planeWidth = 512;   // 화면 표시용 크기는 작게 유지
-    planeHeight = 128;
+    planeWidth = 800;   // 모바일에서 아스키아트 영역 확장
+    planeHeight = 200;
   } else if (window.innerWidth <= 768) {
-    planeWidth = 768;
-    planeHeight = 192;
+    planeWidth = 1000;
+    planeHeight = 250;
   } else {
-    planeWidth = 1024;
-    planeHeight = 256;
+    planeWidth = 1200;
+    planeHeight = 300;
   }
 
   // 텍스트 캔버스 생성
