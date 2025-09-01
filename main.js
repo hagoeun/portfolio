@@ -46,14 +46,14 @@ function init() {
   // 반응형 캔버스 크기
   let canvasWidth, canvasHeight;
   if (window.innerWidth <= 512) {
-    canvasWidth = 512;
-    canvasHeight = 128;
+    canvasWidth = 800;
+    canvasHeight = 200;
   } else if (window.innerWidth <= 768) {
-    canvasWidth = 768;
-    canvasHeight = 192;
+    canvasWidth = 1000;
+    canvasHeight = 250;
   } else {
-    canvasWidth = 1024;
-    canvasHeight = 256;
+    canvasWidth = 1200;
+    canvasHeight = 300;
   }
 
   // 텍스트 캔버스 생성
