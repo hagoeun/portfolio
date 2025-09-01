@@ -43,17 +43,17 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
 
-  // 텍스트 렌더링용 캔버스 크기 - 텍스트가 잘리지 않을 만큼
+  // 반응형 캔버스 크기 - 원래대로 복원
   let canvasWidth, canvasHeight;
   if (window.innerWidth <= 512) {
-    canvasWidth = 600;  // 60px 텍스트가 들어갈 만큼
-    canvasHeight = 150;
+    canvasWidth = 512;
+    canvasHeight = 128;
   } else if (window.innerWidth <= 768) {
-    canvasWidth = 800;  // 80px 텍스트가 들어갈 만큼
-    canvasHeight = 200;
+    canvasWidth = 768;
+    canvasHeight = 192;
   } else {
-    canvasWidth = 1000; // 90px 텍스트가 들어갈 만큼
-    canvasHeight = 250;
+    canvasWidth = 1024;
+    canvasHeight = 256;
   }
 
   // 텍스트 캔버스 생성
@@ -76,7 +76,7 @@ function init() {
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
 
-  // Plane 생성 - 캔버스 크기와 동일하게 (간단하게)
+  // Plane 생성 - 원래대로
   const geometry = new THREE.PlaneGeometry(canvasWidth, canvasHeight);
   const material = new THREE.MeshBasicMaterial({ 
     map: texture, 
@@ -96,24 +96,10 @@ function init() {
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  // AsciiEffect 생성
+  // AsciiEffect 생성 - 원래대로
   console.log('Creating AsciiEffect...');
   effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
-  
-  // 🔥 핵심 해결책: AsciiEffect 크기를 모바일에서 더 크게 설정
-  let asciiWidth, asciiHeight;
-  if (window.innerWidth <= 512) {
-    asciiWidth = Math.min(window.innerWidth * 1.8, 800);   // 모바일에서 1.8배, 최대 800px
-    asciiHeight = Math.min(window.innerHeight * 1.5, 600); // 세로 1.5배, 최대 600px
-  } else if (window.innerWidth <= 768) {
-    asciiWidth = Math.min(window.innerWidth * 1.4, 1000);  // 태블릿 1.4배
-    asciiHeight = Math.min(window.innerHeight * 1.3, 700);
-  } else {
-    asciiWidth = window.innerWidth;
-    asciiHeight = window.innerHeight;
-  }
-  
-  effect.setSize(asciiWidth, asciiHeight);
+  effect.setSize(window.innerWidth, window.innerHeight);
   
   // DOM 기본 스타일
   effect.domElement.style.cssText = `
@@ -219,21 +205,7 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  
-  // AsciiEffect 크기도 반응형으로 재설정
-  let asciiWidth, asciiHeight;
-  if (window.innerWidth <= 512) {
-    asciiWidth = Math.min(window.innerWidth * 1.8, 800);
-    asciiHeight = Math.min(window.innerHeight * 1.5, 600);
-  } else if (window.innerWidth <= 768) {
-    asciiWidth = Math.min(window.innerWidth * 1.4, 1000);
-    asciiHeight = Math.min(window.innerHeight * 1.3, 700);
-  } else {
-    asciiWidth = window.innerWidth;
-    asciiHeight = window.innerHeight;
-  }
-  
-  effect.setSize(asciiWidth, asciiHeight);
+  effect.setSize(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
@@ -244,14 +216,14 @@ function animate() {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // 반응형 텍스트 크기
+  // 반응형 텍스트 크기 - 좀 더 적당하게 조정
   let textSize;
   if (window.innerWidth <= 480) {
-    textSize = 60;
+    textSize = 50; // 60에서 50으로 조정 (잘림 방지)
   } else if (window.innerWidth <= 768) {
-    textSize = 80;
+    textSize = 70; // 80에서 70으로 조정
   } else {
-    textSize = 90;
+    textSize = 90; // 그대로
   }
 
   ctx.font = `bold ${textSize}px "Monaco", monospace`;
