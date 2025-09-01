@@ -46,8 +46,8 @@ function init() {
   // 반응형 캔버스 크기 - 원래대로 복원
   let canvasWidth, canvasHeight;
   if (window.innerWidth <= 512) {
-    canvasWidth = 512;
-    canvasHeight = 128;
+    canvasWidth = 650;
+    canvasHeight = 150;
   } else if (window.innerWidth <= 768) {
     canvasWidth = 768;
     canvasHeight = 192;
