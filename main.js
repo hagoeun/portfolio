@@ -219,9 +219,9 @@ function animate() {
   // 반응형 텍스트 크기
   let textSize;
   if (window.innerWidth <= 480) {
-    textSize = 50;
+    textSize = 60;
   } else if (window.innerWidth <= 768) {
-    textSize = 70;
+    textSize = 80;
   } else {
     textSize = 90;
   }
