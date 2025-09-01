@@ -9,6 +9,19 @@ init();
 animate();
 
 function init() {
+  // 사파리 감지 및 호환성 개선
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  
+  if (isSafari) {
+    console.log('Safari detected - applying compatibility fixes');
+    
+    // 사파리 렌더링 최적화
+    document.body.style.webkitFontSmoothing = 'antialiased';
+    document.body.style.webkitTransform = 'translateZ(0)';
+    document.body.style.willChange = 'transform';
+    document.body.style.backfaceVisibility = 'hidden';
+  }
+
   // 기본 배경 및 폰트 색상 설정
   document.body.style.background = 'black';
   document.body.style.color = 'transparent';
@@ -44,6 +57,12 @@ function init() {
   canvas.height = canvasHeight;
   ctx = canvas.getContext('2d');
 
+  // 사파리에서 캔버스 렌더링 최적화
+  if (isSafari) {
+    ctx.imageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+  }
+
   texture = new THREE.CanvasTexture(canvas);
 
   // Plane의 크기를 캔버스 크기와 비슷하게 맞추어 중앙 정렬 효과 보장
@@ -54,13 +73,32 @@ function init() {
   scene.add(plane);
 
   // 렌더러 및 ASCII 이펙트 설정
-  renderer = new THREE.WebGLRenderer();
+  renderer = new THREE.WebGLRenderer({
+    antialias: !isSafari, // 사파리에서는 안티앨리어싱 비활성화로 성능 개선
+    powerPreference: isSafari ? 'high-performance' : 'default'
+  });
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
   effect.setSize(window.innerWidth, window.innerHeight);
   effect.domElement.style.color = 'white';
   effect.domElement.style.backgroundColor = 'black';
+
+  // 사파리에서 ASCII Effect DOM 최적화
+  if (isSafari) {
+    effect.domElement.style.webkitFontSmoothing = 'antialiased';
+    effect.domElement.style.webkitTransform = 'translateZ(0)';
+    effect.domElement.style.willChange = 'transform';
+    
+    // 사파리에서 테이블 렌더링 강제 최적화
+    setTimeout(() => {
+      const tables = effect.domElement.querySelectorAll('table');
+      tables.forEach(table => {
+        table.style.webkitFontSmoothing = 'antialiased';
+        table.style.webkitTransform = 'translateZ(0)';
+      });
+    }, 100);
+  }
 
   document.body.appendChild(effect.domElement);
 
