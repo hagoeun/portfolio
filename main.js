@@ -9,18 +9,32 @@ init();
 animate();
 
 function init() {
-  // 사파리 감지
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  // 브라우저 감지 (디버깅용)
+  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+  const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+  const isFirefox = /Firefox/.test(navigator.userAgent);
   
-  if (isSafari) {
-    console.log('🦊 Safari detected - starting debug mode');
-  }
+  console.log('Browser detected:', { isChrome, isSafari, isFirefox });
 
-  // 기본 설정
-  document.body.style.background = 'black';
-  document.body.style.color = 'transparent';
-  document.body.style.margin = '0';
-  document.body.style.overflow = 'hidden';
+  // 모든 브라우저에 안정성 강화 적용
+  document.documentElement.style.webkitFontSmoothing = 'antialiased';
+  document.documentElement.style.mozOsxFontSmoothing = 'grayscale';
+  
+  document.body.style.cssText = `
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: black;
+    color: transparent;
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  `;
 
   // Three.js 초기화
   camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
@@ -29,7 +43,7 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
 
-  // 캔버스 크기 설정
+  // 반응형 캔버스 크기
   let canvasWidth, canvasHeight;
   if (window.innerWidth <= 512) {
     canvasWidth = 512;
@@ -42,67 +56,79 @@ function init() {
     canvasHeight = 256;
   }
 
-  // 텍스트 캔버스
+  // 텍스트 캔버스 생성
   canvas = document.createElement('canvas');
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
   ctx = canvas.getContext('2d');
 
+  // 모든 브라우저에서 캔버스 최적화
+  ctx.imageSmoothingEnabled = false;
+  if (ctx.webkitImageSmoothingEnabled !== undefined) {
+    ctx.webkitImageSmoothingEnabled = false;
+  }
+  if (ctx.mozImageSmoothingEnabled !== undefined) {
+    ctx.mozImageSmoothingEnabled = false;
+  }
+
   texture = new THREE.CanvasTexture(canvas);
+  texture.generateMipmaps = false;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
 
   // Plane 생성
   const geometry = new THREE.PlaneGeometry(canvasWidth, canvasHeight);
-  const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+  const material = new THREE.MeshBasicMaterial({ 
+    map: texture, 
+    transparent: true,
+    alphaTest: 0.1
+  });
   plane = new THREE.Mesh(geometry, material);
   plane.position.set(0, -65, 0);
   scene.add(plane);
 
-  // 렌더러 생성
-  renderer = new THREE.WebGLRenderer();
+  // 렌더러 설정 (모든 브라우저 최적화)
+  renderer = new THREE.WebGLRenderer({
+    antialias: false, // 모든 브라우저에서 끄기
+    powerPreference: 'high-performance',
+    preserveDrawingBuffer: true, // 모든 브라우저에서 켜기
+    alpha: false
+  });
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   // AsciiEffect 생성
-  console.log('🔧 Creating AsciiEffect...');
+  console.log('Creating AsciiEffect...');
   effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
   effect.setSize(window.innerWidth, window.innerHeight);
-  effect.domElement.style.color = 'white';
-  effect.domElement.style.backgroundColor = 'black';
+  
+  // DOM 기본 스타일
+  effect.domElement.style.cssText = `
+    color: white !important;
+    background-color: black !important;
+    font-smoothing: antialiased !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    contain: layout style paint !important;
+  `;
 
-  // 🔍 DOM 상태 디버깅
-  console.log('📊 AsciiEffect DOM created:', {
-    tagName: effect.domElement.tagName,
-    children: effect.domElement.children.length,
-    style: effect.domElement.style.cssText,
-    display: getComputedStyle(effect.domElement).display,
-    visibility: getComputedStyle(effect.domElement).visibility,
-    opacity: getComputedStyle(effect.domElement).opacity
-  });
-
-  // DOM에 추가
   document.body.appendChild(effect.domElement);
-  console.log('✅ AsciiEffect DOM added to body');
+  console.log('AsciiEffect DOM added to body');
 
-  // 추가 후 DOM 상태 재확인
-  setTimeout(() => {
-    console.log('📊 DOM status after 1 second:', {
-      bodyChildren: document.body.children.length,
-      effectInDOM: document.body.contains(effect.domElement),
-      effectDisplay: getComputedStyle(effect.domElement).display,
-      effectVisibility: getComputedStyle(effect.domElement).visibility,
-      tables: effect.domElement.querySelectorAll('table').length,
-      tableVisible: effect.domElement.querySelectorAll('table')[0] ? 
-        getComputedStyle(effect.domElement.querySelectorAll('table')[0]).display : 'no table'
-    });
-
-    // 사파리에서 테이블 강제 표시
-    if (isSafari) {
-      const tables = effect.domElement.querySelectorAll('table');
-      console.log(`🔧 Safari: Found ${tables.length} tables for optimization`);
+  // 범용 DOM 안정화 시스템 (모든 브라우저)
+  const universalStabilization = () => {
+    const tables = effect.domElement.querySelectorAll('table');
+    
+    if (tables.length > 0) {
+      console.log(`Stabilizing ${tables.length} tables for all browsers`);
       
       tables.forEach((table, index) => {
-        const beforeStyle = getComputedStyle(table);
-        
-        table.style.cssText = `
+        // 모든 브라우저에서 테이블 안정화
+        table.style.cssText += `
           display: block !important;
           visibility: visible !important;
           opacity: 1 !important;
@@ -114,16 +140,55 @@ function init() {
           z-index: 10 !important;
           color: white !important;
           background: black !important;
+          font-smoothing: antialiased !important;
+          -webkit-font-smoothing: antialiased !important;
+          -moz-osx-font-smoothing: grayscale !important;
+          transform: translateZ(0) !important;
+          -webkit-transform: translateZ(0) !important;
+          will-change: transform !important;
+          contain: layout style !important;
         `;
         
-        const afterStyle = getComputedStyle(table);
-        console.log(`🔧 Table ${index} style change:`, {
-          before: { display: beforeStyle.display, visibility: beforeStyle.visibility },
-          after: { display: afterStyle.display, visibility: afterStyle.visibility }
+        // 테이블 셀들도 최적화
+        const cells = table.querySelectorAll('td');
+        cells.forEach(cell => {
+          cell.style.cssText += `
+            transform: translateZ(0) !important;
+            -webkit-transform: translateZ(0) !important;
+            font-smoothing: antialiased !important;
+            -webkit-font-smoothing: antialiased !important;
+          `;
         });
       });
     }
-  }, 1000);
+  };
+
+  // 다단계 안정화 (모든 브라우저에 적용)
+  setTimeout(universalStabilization, 50);
+  setTimeout(universalStabilization, 200);
+  setTimeout(universalStabilization, 500);
+  
+  // 주기적 안정화 (모든 브라우저)
+  setInterval(() => {
+    const tables = effect.domElement.querySelectorAll('table');
+    tables.forEach(table => {
+      // 미세한 transform 변경으로 렌더링 강제 업데이트
+      table.style.transform = 'translateZ(0.001px)';
+      setTimeout(() => {
+        table.style.transform = 'translateZ(0px)';
+      }, 10);
+    });
+  }, 200); // 200ms마다
+
+  // DOM 변화 감시 (모든 브라우저)
+  const observer = new MutationObserver(() => {
+    setTimeout(universalStabilization, 20);
+  });
+  observer.observe(effect.domElement, { 
+    childList: true, 
+    subtree: true, 
+    attributes: true 
+  });
 
   // 클릭 이벤트
   const clickableOverlay = document.getElementById('clickable-overlay');
@@ -144,14 +209,14 @@ function onWindowResize() {
 }
 
 function animate() {
-  console.log('animation loop running'); // 기존 로그 유지
+  console.log('animation loop running');
   const elapsed = Date.now() - startTime;
 
-  // 캔버스 그리기
+  // 캔버스에 텍스트 그리기
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // 텍스트 크기 설정
+  // 반응형 텍스트 크기
   let textSize;
   if (window.innerWidth <= 480) {
     textSize = 30;
@@ -166,7 +231,7 @@ function animate() {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'white';
 
-  // 텍스트 그리기
+  // 애니메이션 텍스트
   const y = canvas.height / 2 + Math.sin(elapsed * 0.001) * 15;
   ctx.fillText('Press Start', canvas.width / 2, y);
 
