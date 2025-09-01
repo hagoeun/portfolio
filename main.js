@@ -219,11 +219,11 @@ function animate() {
   // 반응형 텍스트 크기
   let textSize;
   if (window.innerWidth <= 480) {
-    textSize = 30;
-  } else if (window.innerWidth <= 768) {
     textSize = 50;
+  } else if (window.innerWidth <= 768) {
+    textSize = 70;
   } else {
-    textSize = 80;
+    textSize = 90;
   }
 
   ctx.font = `bold ${textSize}px "Monaco", monospace`;
