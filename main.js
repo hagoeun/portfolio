@@ -46,8 +46,8 @@ function init() {
   // 반응형 캔버스 크기 - 원래대로 복원
   let canvasWidth, canvasHeight;
   if (window.innerWidth <= 512) {
-    canvasWidth = 650;
-    canvasHeight = 150;
+    canvasWidth = 512;
+    canvasHeight = 128;
   } else if (window.innerWidth <= 768) {
     canvasWidth = 768;
     canvasHeight = 192;
@@ -101,7 +101,7 @@ function init() {
   effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
   effect.setSize(window.innerWidth, window.innerHeight);
   
-  // DOM 기본 스타일
+  // DOM 기본 스타일 + 모바일에서 크기 확장
   effect.domElement.style.cssText = `
     color: white !important;
     background-color: black !important;
@@ -115,6 +115,12 @@ function init() {
     -webkit-backface-visibility: hidden !important;
     contain: layout style paint !important;
   `;
+
+  // 모바일에서 AsciiEffect DOM 크기 강제 확장
+  if (window.innerWidth <= 768) {
+    effect.domElement.style.transform = `scale(1.5) translateZ(0)`; // 1.5배 확대
+    effect.domElement.style.transformOrigin = 'center center';
+  }
 
   document.body.appendChild(effect.domElement);
   console.log('AsciiEffect DOM added to body');
@@ -206,6 +212,14 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   effect.setSize(window.innerWidth, window.innerHeight);
+  
+  // 모바일에서 크기 조정 재적용
+  if (window.innerWidth <= 768) {
+    effect.domElement.style.transform = `scale(1.5) translateZ(0)`;
+    effect.domElement.style.transformOrigin = 'center center';
+  } else {
+    effect.domElement.style.transform = 'translateZ(0)';
+  }
 }
 
 function animate() {
@@ -219,7 +233,7 @@ function animate() {
   // 반응형 텍스트 크기 - 좀 더 적당하게 조정
   let textSize;
   if (window.innerWidth <= 480) {
-    textSize = 40; 
+    textSize = 50; // 60에서 50으로 조정 (잘림 방지)
   } else if (window.innerWidth <= 768) {
     textSize = 70; // 80에서 70으로 조정
   } else {
