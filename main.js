@@ -16,10 +16,16 @@ function init() {
     console.log('Safari detected - applying compatibility fixes');
     
     // 사파리 렌더링 최적화
+    document.documentElement.style.webkitFontSmoothing = 'antialiased';
+    document.documentElement.style.webkitTransform = 'translateZ(0)';
     document.body.style.webkitFontSmoothing = 'antialiased';
     document.body.style.webkitTransform = 'translateZ(0)';
     document.body.style.willChange = 'transform';
     document.body.style.backfaceVisibility = 'hidden';
+
+    // 사파리 특별 최적화
+    document.body.style.webkitPerspective = '1000px';
+    document.body.style.webkitTransformStyle = 'preserve-3d';
   }
 
   // 기본 배경 및 폰트 색상 설정
@@ -60,10 +66,21 @@ function init() {
   // 사파리에서 캔버스 렌더링 최적화
   if (isSafari) {
     ctx.imageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
+    if (ctx.webkitImageSmoothingEnabled !== undefined) {
+      ctx.webkitImageSmoothingEnabled = false;
+    }
+    // 사파리 캔버스 강제 리렌더링 방지
+    ctx.save();
   }
 
   texture = new THREE.CanvasTexture(canvas);
+
+  // 사파리에서 텍스처 최적화
+  if (isSafari) {
+    texture.generateMipmaps = false;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+  }
 
   // Plane의 크기를 캔버스 크기와 비슷하게 맞추어 중앙 정렬 효과 보장
   const geometry = new THREE.PlaneGeometry(canvasWidth, canvasHeight);
@@ -84,20 +101,41 @@ function init() {
   effect.domElement.style.color = 'white';
   effect.domElement.style.backgroundColor = 'black';
 
-  // 사파리에서 ASCII Effect DOM 최적화
+   // 사파리에서 ASCII Effect DOM 강화된 최적화
   if (isSafari) {
     effect.domElement.style.webkitFontSmoothing = 'antialiased';
     effect.domElement.style.webkitTransform = 'translateZ(0)';
     effect.domElement.style.willChange = 'transform';
+    effect.domElement.style.webkitPerspective = '1000px';
+    effect.domElement.style.webkitTransformStyle = 'preserve-3d';
     
-    // 사파리에서 테이블 렌더링 강제 최적화
-    setTimeout(() => {
+    // 사파리에서 DOM 강제 리플로우 방지
+    effect.domElement.style.contain = 'layout style paint';
+    
+    // 사파리에서 테이블 렌더링 강화된 최적화 (더 빠르게 적용)
+    const optimizeTables = () => {
       const tables = effect.domElement.querySelectorAll('table');
       tables.forEach(table => {
         table.style.webkitFontSmoothing = 'antialiased';
         table.style.webkitTransform = 'translateZ(0)';
+        table.style.willChange = 'transform';
+        table.style.contain = 'layout style';
+        
+        // 테이블 셀들도 최적화
+        const cells = table.querySelectorAll('td');
+        cells.forEach(cell => {
+          cell.style.webkitTransform = 'translateZ(0)';
+        });
       });
-    }, 100);
+    };
+    
+    // 즉시 실행 + 지연 실행으로 이중 보장
+    setTimeout(optimizeTables, 50);
+    setTimeout(optimizeTables, 200);
+    
+    // 추가로 DOM 변화 감지해서 최적화 재적용
+    const observer = new MutationObserver(optimizeTables);
+    observer.observe(effect.domElement, { childList: true, subtree: true });
   }
 
   document.body.appendChild(effect.domElement);
