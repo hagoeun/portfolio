@@ -215,7 +215,7 @@ function onWindowResize() {
   
   // 모바일에서 크기 조정 재적용
   if (window.innerWidth <= 768) {
-    effect.domElement.style.transform = `scale(1.5) translateZ(0)`;
+    effect.domElement.style.transform = `scale(1.8) translateZ(0)`; // 아스키아트 1.8배 확대
     effect.domElement.style.transformOrigin = 'center center';
   } else {
     effect.domElement.style.transform = 'translateZ(0)';
