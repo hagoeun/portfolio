@@ -12,7 +12,7 @@ html, body {
   margin: 0 !important;
   padding: 0 !important;
   overflow: auto !important;
-  background: black !important;
+  background: #0c0c0c !important;
 }
 
 /* AsciiEffect(Three.js 아스키캔버스)가 무조건 화면 전체 덮고, 중앙정렬 되도록 */
@@ -30,7 +30,7 @@ body > * {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: black !important;
+  background: #0c0c0c !important;
   color: white !important;
   font-family: monospace !important;
   white-space: pre !important;
@@ -49,7 +49,7 @@ table, td {
   border-collapse: collapse !important;
   font-family: monospace !important;
   color: white !important;
-  background: black !important;
+  background: #0c0c0c !important;
   line-height: 1 !important;
   text-align: center !important;
   white-space: pre !important;
