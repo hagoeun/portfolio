@@ -16,11 +16,12 @@
       box-sizing: border-box;
     }
     body {
-      height: 100vh;
+      min-height: 100vh;
       /* Noto Sans KR로 전체 통일 */
       font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       color: #fff;
       overflow-x: hidden;
+      overflow-y: auto;
       position: relative;
     }
     .h-line, .v-line {
@@ -36,7 +37,7 @@
     .v-line {
       left: 210px; top: 0;
       width: 2px; height: 200vh; /* 높이를 200vh로 늘려 스크롤 시에도 선이 보이게 함 */
-      position: absolute;
+      position: fixed;
     }
     .icon {
       position: absolute; top: 30px; left: 70px;
@@ -45,7 +46,7 @@
       z-index: 1;
     }
     .menu {
-      position: absolute;
+      position: fixed;
       top: 160px; left: 30px; right: 0;
       display: flex;
       gap: 20px;
@@ -95,6 +96,9 @@
       padding-left: 20px;
       padding-right: 40px;
       padding-top: 5px;
+      padding-bottom: 100px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
     }
     .content-section {
       display: none;
@@ -134,7 +138,7 @@
       line-height: 1.6;
     }
     .work-detail.active {
-      max-height: 2000px; /* 유튜브 영상을 위해 높이 증가 */
+      max-height: 3000px; /* 유튜브 영상을 위해 높이 증가 */
       padding: 12px 24px;
       margin-bottom: 50px; /* 토글 열린 상태에서 아래쪽 여백 추가 */
     }
@@ -194,6 +198,7 @@
     }
     @media (max-width: 600px) {
       .menu {
+        position: fixed;
         top: 90px;
         left: 20px;
         right: 20px;
@@ -215,6 +220,8 @@
         font-size: 0.9rem;
         padding-right: 0;
         padding-left: 0;
+        max-height: calc(100vh - 180px);
+        padding-bottom: 120px;
       }
       .icon {
         width: 48px;
