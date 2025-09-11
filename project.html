@@ -405,9 +405,6 @@
           detailEl.classList.remove('active');
           item.classList.remove('active');
         } else {
-          // 모든 열린 상세 내용 닫기
-          document.querySelectorAll('.work-detail.active').forEach(el => el.classList.remove('active'));
-          document.querySelectorAll('.work-item.active').forEach(el => el.classList.remove('active'));
           // 선택한 항목 열기
           detailEl.classList.add('active');
           item.classList.add('active');
